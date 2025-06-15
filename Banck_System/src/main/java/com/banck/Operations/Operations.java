@@ -1,7 +1,10 @@
 package com.banck.Operations;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 
 import com.banck.Config.SessionProvider;
@@ -73,6 +76,40 @@ public class Operations {
 		ses.beginTransaction().commit();
 	}
 	
+	public List<BanckAccount> getAccountsByIds(){
+		ArrayList<Integer> accountNum= new ArrayList<Integer>();
+		System.out.println("How many account no you want :");
+		int count=sc.nextInt();
+		for (int i = 1; i <=count; i++) {
+			System.out.println("Enter account no :");
+			int acc=sc.nextInt();
+			accountNum.add(acc);
+			
+		}
+		
+		SessionProvider s=new SessionProvider();
+		Session ses = s.seesionGiven();
+		List<BanckAccount> acccounts = ses.byMultipleIds(BanckAccount.class).multiLoad(accountNum);
+		
+		
+		
+		
+		return acccounts;
+		
+	}
+	
+	public List<BanckAccount> getAllAccounts(){
+		SessionProvider sf=new SessionProvider();
+		Session ses = sf.seesionGiven();
+		Criteria criteria = ses.createCriteria(BanckAccount.class);
+		List<BanckAccount> list = criteria.list();
+		
+		
+		return list;
+	}
+	
+	
+	
 	public void MenueBanck() {
 		int a=1;
 		while(a!=0) {
@@ -80,7 +117,9 @@ public class Operations {
 		System.out.println("Enter 2 for delete banck Account ");
 		System.out.println("Enter 3 for update banck Account ");
 		System.out.println("Enter 4 for show banck Account ");
-		System.out.println("Enter 5  for exit :");
+		System.out.println("Enter 5 for Multiple accounts get by ids :");
+		System.out.println("Enter 6 for get All Accounts :");
+		System.out.println("Enter 0  for exit :");
 		
 		int value = sc.nextInt();
 		
@@ -95,6 +134,20 @@ public class Operations {
 		break;
 		case 4: showData();
 		break;
+		
+		case 5:{ List<BanckAccount> accountsByIds = getAccountsByIds();
+		        for (BanckAccount banckAccount : accountsByIds) {
+					System.out.println(banckAccount);
+				}
+		}
+		break;
+		
+		case 6:{ List<BanckAccount> accountsByIds = getAllAccounts();
+        for (BanckAccount banckAccount : accountsByIds) {
+			System.out.println(banckAccount);
+		}
+}
+break;
 
 		default: System.exit(0);
 			break;
